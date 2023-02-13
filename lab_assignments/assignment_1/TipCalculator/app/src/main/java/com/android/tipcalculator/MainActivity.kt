@@ -1,17 +1,19 @@
 package com.android.tipcalculator
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.android.tipcalculator.databinding.ActivityMainBinding
 import java.text.NumberFormat
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var  tipCalc: TipCalculator
-    private lateinit var calculateButton: Button
-    lateinit var button: Button
+    private lateinit var binding: ActivityMainBinding
+    private val tipCalc= TipCalculator(0.0f,0.0f)
+    //  private lateinit var calculateButton: Button
     lateinit var amountBill: EditText
     lateinit var amountTip: EditText
     lateinit var amountTipView: TextView
@@ -19,38 +21,35 @@ class MainActivity : AppCompatActivity() {
     var money = NumberFormat.getCurrencyInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        amountBill = findViewById(R.id.amount_bill)
-        amountTip = findViewById(R.id.amount_tip_percent)
-        amountTipView = findViewById(R.id.amount_tip)
-        amountTotalView = findViewById(R.id.amount_total)
-        calculateButton = findViewById(R.id.button_calculator)
-        calculateButton.setOnClickListener { view: View ->
+        //  setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.buttonCalculator.setOnClickListener { view: View ->
             calculate()
         }
 
     }
     fun calculate() {
-        tipCalc= TipCalculator()
-        val billString: String = amountBill.getText().toString()
-        val tipString: String = amountTip.getText().toString()
-        try {
-            // convert billString and tipString to floats
-            val billAmount = billString.toFloat()
-            val tipPercent = tipString.toFloat()
-            // update the Model
-            tipCalc.bill= billAmount
-            tipCalc.tip= (tipPercent * 0.01f)
-            // tipCalc.bill=billAmount
-            // ask Model to calculate tip and total amounts
-            val tip = tipCalc.tipAmount()
-            val total = tipCalc.totalAmount()
-            // update the View with formatted tip and total amounts
-            amountTipView.text = money.format(tip.toDouble())
-            amountTotalView.text = money.format(total.toDouble())
 
-        } catch (nfe: NumberFormatException) {
-            // pop up an alert view here
-        }
+        val  amountBill = binding.amountBill
+        val stringBillAmount = amountBill.text.toString()
+        val billAmount = stringBillAmount.toFloat()
+        tipCalc.bill= billAmount
+
+        //Get amount of tip percentage
+
+        val billTip = binding.amountTipPercent.text.toString().toFloat()
+        tipCalc.tip=.01f * billTip
+
+        //Determine the amount of tip and convert it to string
+        val amountTip: String =
+        money.format(tipCalc.tipAmount()).toString()
+
+        //Determine the total and convert it to string
+        val amountTotal: String = money.format(tipCalc.totalAmount()).toString()
+
+        //Display the amount of tip and convert it to string
+        binding.amountTip.setText(amountTip)
+        binding.amountTotal.setText(amountTotal)
     }
 }
