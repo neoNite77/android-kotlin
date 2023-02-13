@@ -35,9 +35,20 @@ class MainActivity : AppCompatActivity() {
             }
         })
         //YOUR CODE TO FOR THE TEXT CHANGE HANDLING EVENT FOR TIP PERCENTAGE INPUT
-        binding.amountTipPercent.doAfterTextChanged {
-            calculate()
-        }
+        binding.amountTipPercent.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {
+                calculate()
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+            }
+        })
 
     }
     fun calculate() {
