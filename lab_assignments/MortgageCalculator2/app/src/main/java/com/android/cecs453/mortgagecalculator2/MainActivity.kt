@@ -12,6 +12,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     val pf : Prefs = Prefs(this)
 
+    // Create a companion object to share data between Main and Data activities.
+    // it is to make the mortgage instance variable public and static
     companion object
     {
         val mortgage = Mortgage()
@@ -19,17 +21,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pf.getPrefernces(Mortgage())
+        pf.getPrefernces(mortgage)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
     }
 
+    // On start, update the GUI when the user changes a value
     override fun onStart() {
         super.onStart()
         updateView()
     }
 
+    // Update the text fields in the main activity based on the mortgage instance
     fun updateView() {
         binding.amount.setText(mortgage.getAmount().toString())
         binding.years.setText(mortgage.getYears().toString())
@@ -37,6 +41,8 @@ class MainActivity : AppCompatActivity() {
         binding.payment.setText(mortgage.formattedMonthlyPayment())
         binding.total.setText(mortgage.formattedTotalPayment())
     }
+
+    // When the user clicks on the modify data button, then transition to the data activity
     fun modifyData(view: View) {
         val myIntent = Intent(this, DataActivity::class.java)
         this.startActivity(myIntent)
