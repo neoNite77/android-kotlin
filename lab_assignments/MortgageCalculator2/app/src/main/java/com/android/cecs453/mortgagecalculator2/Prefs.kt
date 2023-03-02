@@ -9,6 +9,8 @@ class Prefs (context1: Context) {
     private var amount:Float=200000.0f
     private var years: Int =15
     private var rate: Float =0.035f
+
+    // Use the editor to edit the Mortgage object and put in the values for each field
     fun setPreferences(mort: Mortgage) {
         var s: SharedPreferences? =
             context!!.getSharedPreferences("Mortgage", Context.MODE_PRIVATE)
@@ -27,10 +29,11 @@ class Prefs (context1: Context) {
         editor?.apply()
     }
 
-    fun getPrefernces(mort: Mortgage)
+    // Retrieve the shared preferences
+    fun getPreferences(mort: Mortgage)
     {
 
-        var s: SharedPreferences? = PreferenceManager.getDefaultSharedPreferences(context)
+        val s: SharedPreferences? = context?.getSharedPreferences("Mortgage", Context.MODE_PRIVATE)
         if (s != null) {
             mort.setYears(s.getInt(Mortgage.PREFERENCE_YEARS, 30))
             mort.setAmount(s.getFloat(Mortgage.PREFERENCE_AMOUNT, 100000.0f))

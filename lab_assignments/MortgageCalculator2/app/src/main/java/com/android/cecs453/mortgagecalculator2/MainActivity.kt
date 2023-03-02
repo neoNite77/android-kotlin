@@ -11,23 +11,16 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     val pf : Prefs = Prefs(this)
-
-    // Create a companion object to share data between Main and Data activities.
-    // it is to make the mortgage instance variable public and static
-    companion object
-    {
-        val mortgage = Mortgage()
-    }
+    private val mortgage = Mortgage()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pf.getPrefernces(mortgage)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
     }
 
-    // On start, update the GUI when the user changes a value
+    // On start, update the GUI when the page loads
     override fun onStart() {
         super.onStart()
         updateView()
@@ -35,9 +28,10 @@ class MainActivity : AppCompatActivity() {
 
     // Update the text fields in the main activity based on the mortgage instance
     fun updateView() {
-        binding.amount.setText(mortgage.getAmount().toString())
+        pf.getPreferences(mortgage)
+        binding.amount.setText(mortgage.getFormattedAmount().toString())
         binding.years.setText(mortgage.getYears().toString())
-        binding.rate.setText(mortgage.getRate().toString())
+        binding.rate.setText((mortgage.getRate() * 100).toString() + "%")
         binding.payment.setText(mortgage.formattedMonthlyPayment())
         binding.total.setText(mortgage.formattedTotalPayment())
     }
